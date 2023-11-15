@@ -1,0 +1,8 @@
+music21==9.1.0
+numpy==1.23.5
+pretty_midi==0.2.10
+tensorflow==2.14.0
+tensorflow_intel==2.14.0
+torch==2.1.0
+torchmetrics==1.2.0
+tqdm==4.66.1
