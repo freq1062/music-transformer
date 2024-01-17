@@ -170,3 +170,63 @@ class BarDataset(Dataset):
             "src_seq": tokenizedInput,
             "tgt_seq": tokenizedOutput,
         }
+    
+class EventDataset(Dataset):
+
+    def __init__(self, ds, vocabulary, seq_len):
+        super().__init__()
+        self.seq_len = seq_len
+
+        self.ds = ds
+        self.vocabulary = vocabulary
+        #self.src_lang = src_lang
+        #self.tgt_lang = tgt_lang
+
+        self.sos_token = torch.tensor([vocabulary["EOS"]], dtype=torch.int64)
+        self.eos_token = torch.tensor([vocabulary["SOS"]], dtype=torch.int64)
+        self.pad_token = torch.tensor([vocabulary["PAD"]], dtype=torch.int64)
+
+    def __len__(self):
+        return len(self.ds)
+
+    def __getitem__(self, idx):
+        src_pair = self.ds[idx]
+
+        tokenizedInput = src_pair[0]
+        tokenizedOutput = src_pair[1]
+
+        # Add sos, eos and padding to each sentence
+        enc_num_padding_tokens = self.seq_len - len(tokenizedInput) - 2  # We will add <s> and </s>
+        # We will only add <s>, and </s> only on the label
+        dec_num_padding_tokens = self.seq_len - len(tokenizedOutput) - 1
+
+        # Make sure the number of padding tokens is not negative. If it is, the sentence is too long
+        if enc_num_padding_tokens < 0 or dec_num_padding_tokens < 0:raise ValueError("Sentence is too long")
+
+        input = torch.cat([
+                self.sos_token,
+                torch.tensor(tokenizedInput, dtype=torch.int64),
+                self.eos_token,
+                torch.tensor([self.pad_token] * enc_num_padding_tokens, dtype=torch.int64),
+            ]
+        )
+
+        # Add only </s> token
+        label = torch.cat(
+            [
+                torch.tensor(tokenizedOutput, dtype=torch.int64),
+                self.eos_token,
+                torch.tensor([self.pad_token] * dec_num_padding_tokens, dtype=torch.int64),
+            ]
+        )
+
+        # Double check the size of the tensors to make sure they are all seq_len long
+        assert input.size(0) == self.seq_len
+        assert label.size(0) == self.seq_len
+
+        return {
+            "input": input,
+            "label": label,  # (seq_len)
+            "src_seq": tokenizedInput,
+            "tgt_seq": tokenizedOutput,
+        }
