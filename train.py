@@ -99,7 +99,7 @@ def createDataset(filenames, pkl:bool=True): #Recheck this
         tokenizer = buildVocab(notes_raw, ["SOS", "EOS", "PAD"])
         return tokenizer, ds
 
-tokenizer, ds = createDataset([r"midiData_EVENTS.pkl", r"tokens_EVENTS.pkl"], True)
+tokenizer, ds = createDataset([r"training_data\midiData_EVENTS.pkl", r"training_data\tokens_EVENTS.pkl"], True)
 
 def saveData(filenames:str="maestro"): #From the raw dataset creates the pkl files which load faster
     tokenizer, ds = createDataset(getFilepaths(filenames), pkl=False)
