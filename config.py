@@ -3,17 +3,17 @@ from pathlib import Path
 def get_config():
     return {
         "batch_size": 128,
-        "num_epochs": 400, #Eh as many as i can finish ig
-        "num_files":1282, #Kind of irrelevant, saved the data to .pkl files
-        "lr": 10**-4,
-        "seq_len": 200, #Actually n-2 because of EOS, SOS tokens
+        "num_epochs": 200, #Usually done by 200
+        "num_files":1282, #Number of files from the raw midi files, max 1282
+        "lr": 10**-4, #For the mask
+        "seq_len": 200, #Actually will be seq_len - 2 because of EOS, SOS tokens
         "d_model": 512, #Dimensionality of embedding
         "datasource": 'maestro', #Source of data
-        "model_folder": "weights",
+        "model_folder": "weights", #Actually maestro\weights
         "model_basename": "tmodel_",
-        "num_samples":500, #irrelevant as well
+        "num_samples":2048, #if from pkl file determines number of pairs to train on
         "preload": "latest", #Load the latest model weights available
-        "experiment_name": "runs/tmodel"
+        "experiment_name": "runs/tmodel" #Folder for tensorboard + other metric stuff
     }
 
 def get_weights_file_path(config, epoch: str):
