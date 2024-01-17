@@ -2,15 +2,16 @@ from pathlib import Path
 
 def get_config():
     return {
-        "batch_size": 8,
-        "num_epochs": 20,
-        "num_files":2, #Only for debugging(all the files are saved to midiData.pkl)
+        "batch_size": 128,
+        "num_epochs": 400, #Eh as many as i can finish ig
+        "num_files":1282, #Kind of irrelevant, saved the data to .pkl files
         "lr": 10**-4,
-        "seq_len": 350, #Actually 347 because of SOS, EOS tokens
+        "seq_len": 200, #Actually n-2 because of EOS, SOS tokens
         "d_model": 512, #Dimensionality of embedding
         "datasource": 'maestro', #Source of data
         "model_folder": "weights",
         "model_basename": "tmodel_",
+        "num_samples":500, #irrelevant as well
         "preload": "latest", #Load the latest model weights available
         "experiment_name": "runs/tmodel"
     }
@@ -22,6 +23,7 @@ def get_weights_file_path(config, epoch: str):
 
 # Find the latest weights file in the weights folder
 def latest_weights_file_path(config):
+    print("Loading latest weights")
     model_folder = f"{config['datasource']}_{config['model_folder']}"
     model_filename = f"{config['model_basename']}*"
     weights_files = list(Path(model_folder).glob(model_filename))
