@@ -11,7 +11,7 @@ def get_config():
         "datasource": 'maestro', #Source of data
         "model_folder": "weights", #Actually maestro\weights
         "model_basename": "tmodel_",
-        "num_samples":2048, #if from pkl file determines number of pairs to train on
+        "num_samples":2048, #if from pkl file determines number of pairs to train on, max 69961
         "preload": "latest", #Load the latest model weights available
         "experiment_name": "runs/tmodel" #Folder for tensorboard + other metric stuff
     }
