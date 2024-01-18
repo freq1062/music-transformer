@@ -11,11 +11,7 @@ from tqdm import tqdm
 import pathlib
 from pathlib import Path
 import numpy as np
-import math
-import random #If smaller dataset
 
-#Yea i probably wont be writing this stuff lol
-import torchmetrics
 from torch.utils.tensorboard import SummaryWriter
 
 #configure.run() #Music21 visualization
@@ -24,8 +20,6 @@ import glob
 import pickle
 import pretty_midi
 import music21
-import pandas as pd
-import matplotlib as plt
 
 def getFilepaths(custom:str="maestro"):
     if custom == "maestro":
