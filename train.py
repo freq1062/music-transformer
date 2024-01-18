@@ -291,7 +291,7 @@ def get_ds(config):
     return train_dataloader, val_dataloader #Returns formatted tensors
 
 def get_model(config, vocab_size): 
-    model = MusicTransformer(vocab_size, config["d_model"], 8)
+    model = torch.jit.script(MusicTransformer(vocab_size, config["d_model"], 8))
     #Actually seq_len doesn't really matter because it's all done in preprocessing
     #Currently d_model is 512, num_heads is 8 according to original transformer paper
     #Leaving depth, d_ff, dropout to default 
