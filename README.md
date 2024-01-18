@@ -1,6 +1,10 @@
 A pretty small decoder-only transformer model that I wrote using pytorch for an Extended Essay research project. 
 
-Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer). Technically this is the third version of this model, first I tried an encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) and then tried the decoder-only except with regular absolute attention. 
+Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer). The two main differences are:
+1. The sequence length is 200; you can change it to generate longer sequences by just changing seq_len in config.py, but you will need to preprocess the dataset again. I don't even have a GPU so it was basically impossible for me to actually train a model that big, and for the sake of research 200 was good enough for me.
+2. There are no dynamics or pedal events like in the original paper; the research project I was doing was mostly about figuring out if dynamics were actually important for emotion, and I wanted to make this transformer to show that it wasn't as important as just notes. Also, again I wanted to keep it simple and reduce the complexity. Without pedal and dynamic events, a sequence length of 200 is actually more like 400 in the original representation style. 
+
+Technically this is the third version of this model, first I tried an encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) and then tried the decoder-only except with regular absolute attention. 
 
 Here is the general architecture of the model:
 
