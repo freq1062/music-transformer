@@ -19,7 +19,11 @@ getOutput(filename).show()
 ```
 to:
 ```python
-getOutput(filename).show("midi") or getOutput(filename).show("text")
+getOutput(filename).show("midi")
+```
+or
+```python
+getOutput(filename).show("text")
 ```
 
 The parameters I set for this model are in config.py, and the tokens and training data from Maestro are already preprocessed in the "training_data" folder. So just unzip them in the same directory as the project clone and it should work fine. Alternatively, you can input custom training data by replacing 
