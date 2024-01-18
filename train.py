@@ -14,7 +14,7 @@ import numpy as np
 
 from torch.utils.tensorboard import SummaryWriter
 
-#configure.run() #Music21 visualization
+configure.run() #Music21 visualization
 import tensorflow as tf
 import glob
 import pickle
