@@ -7,11 +7,11 @@ Here is the general architecture of the model:
 1. Input: (batch_size, seq_len)
 2. Embeddings: (batch_size, seq_len, d_model) and it stays this shape until the output
 3. Decoder Block: run (depth) times
-  1. Relative self attention: I mostly followed [this implementation](https://jaketae.github.io/study/relative-positional-encoding/)
-  2. Dropout
-  3. Normalize
-  4. Feed forward(basically a linear layer)
-  5. Normalize again
+>  1. Relative self attention: I mostly followed [this implementation](https://jaketae.github.io/study/relative-positional-encoding/)
+>  2. Dropout
+>  3. Normalize
+>  4. Feed forward(basically a linear layer)
+>  5. Normalize again
 4. Projection (batch_size seq_len, vocab_size) - it's a matrix which has a probability for each token in the vocabulary
 5. Decode and show - I used the music21 library to convert the output to a score. If you don't have a score editor installed, you can change:
 ```python
