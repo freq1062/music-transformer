@@ -407,5 +407,5 @@ if __name__ == '__main__':
     config = get_config()    
     train_model(config)
         
-#filename = r"C:\Users\alexm\Downloads\Sound Testing 2\midi songs\Debussy_Reverie.mid"
+#filename = r""
 #getOutput(filename).show()
