@@ -1,6 +1,26 @@
 A pretty small decoder-only transformer model that I wrote using pytorch for an Extended Essay research project. 
 
-Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer). Technically this is the third version of this model, first I tried an encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) and then tried the decoder-only except with regular absolute attention.
+Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer). Technically this is the third version of this model, first I tried an encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) and then tried the decoder-only except with regular absolute attention. 
+
+Here is the general architecture of the model:
+
+1. Input: (batch_size, seq_len)
+2. Embeddings: (batch_size, seq_len, d_model) and it stays this shape until the output
+3. Decoder Block: run (depth) times
+  1. Relative self attention: I mostly followed [this implementation](https://jaketae.github.io/study/relative-positional-encoding/)
+  2. Dropout
+  3. Normalize
+  4. Feed forward(basically a linear layer)
+  5. Normalize again
+4. Projection (batch_size seq_len, vocab_size) - it's a matrix which has a probability for each token in the vocabulary
+5. Decode and show - I used the music21 library to convert the output to a score. If you don't have a score editor installed, you can change:
+```python
+getOutput(filename).show()
+```
+to:
+```python
+getOutput(filename).show("midi") or getOutput(filename).show("text")
+```
 
 The parameters I set for this model are in config.py, and the tokens and training data from Maestro are already preprocessed in the "training_data" folder. So just unzip them in the same directory as the project clone and it should work fine. Alternatively, you can input custom training data by replacing 
 ```python
