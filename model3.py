@@ -87,6 +87,7 @@ class RelativeGlobalAttention(nn.Module):
         attn = attn.masked_fill(mask == 0, float("-inf"))
         # attn.shape = (batch_size, num_heads, seq_len, seq_len)
         attn = F.softmax(attn, dim=-1)
+        self.attention_scores = attn #For attention visualization during forward pass
         out = torch.matmul(attn, v)
         # out.shape = (batch_size, num_heads, seq_len, d_head)
         out = out.transpose(1, 2)
