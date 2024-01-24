@@ -9,6 +9,18 @@ Technically this is the third version of this model, first I tried an encoder-de
 
 ### Architecture
 
+===============================================================================================
+Total params: 17,958,417
+Trainable params: 17,958,417
+Non-trainable params: 0
+Total mult-adds (Units.GIGABYTES): 2.29
+===============================================================================================
+Input size (MB): 0.20
+Forward/backward pass size (MB): 6609.51
+Params size (MB): 71.53
+Estimated Total Size (MB): 6681.24
+===============================================================================================
+
 1. Input: (batch_size, seq_len)
 2. Embeddings: (batch_size, seq_len, d_model) and it stays this shape until the output
 3. Decoder Block: run (depth) times
