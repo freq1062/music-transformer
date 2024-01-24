@@ -416,13 +416,13 @@ def getOutput(filename:str, notes:int, start:int): #filename of midi file to sen
         print(" ".join(model_out_text))
         return decodeEvents(arranged_file["src_seq"] + model_out_text)
 
-Begin training loop
+#Begin training loop
  if __name__ == '__main__':
     warnings.filterwarnings("ignore")
     config = get_config()    
      train_model(config)
 
+#Generate an output
 if __name__ == '__main__':
     filename = r""
     getOutput(filename, 30, 30).show("midi")
-    
