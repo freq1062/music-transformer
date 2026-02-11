@@ -1,0 +1,16 @@
+.conda/
+env/
+venv/
+*.egg-info
+
+__pycache__/
+*.py[cod]
+
+*.pkl
+*.mid
+*.pt
+*.pth
+data/
+weights/
+
+.ipynb_checkpoints
