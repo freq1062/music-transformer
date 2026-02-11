@@ -1,65 +1,33 @@
 # Description
 A pretty small decoder-only transformer model that I wrote using pytorch for an Extended Essay research project. 
 
-Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer). The two main differences are:
-1. The sequence length is 200; you can change it to generate longer sequences by just changing seq_len in config.py, but you will need to preprocess the dataset again. I don't even have a GPU so it was basically impossible for me to actually train a model bigger than that, and for the sake of research 200 was good enough for me.
-2. There are no dynamics or pedal events like in the original paper; the research project I was doing was mostly about figuring out if dynamics were actually important for emotion, and I wanted to make this transformer to show that it wasn't as important as just notes. Also, again I wanted to keep it simple and reduce the complexity. Without pedal and dynamic events, a sequence length of 200 is actually more like 400 in the original representation style. 
+Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer).
 
-Technically this is the third version of this model, first I tried an encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) and then tried the decoder-only except with regular absolute attention. 
+This is the fourth version of the model, here is what I have tried:
+1. An encoder-decoder model from [this tutorial](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj3oc3O4ueDAxVdvokEHQgCC0UQwqsBegQIGxAF&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DISNdQcPhsts&usg=AOvVaw0zMv7ihV0qPGsNVgBAtjQD&opi=89978449) 
+2. Decoder-only except with regular absolute attention.
+3. Added the special skewing procedure found in [this paper](https://arxiv.org/pdf/1809.04281).
+4. Current revisit, I corrected some issues with dropout, added learning rate scheduling and updated the hyperparameters now that I have access to lab machines. To sequence length went from 200 -> 1024, exactly like in the aforementioned paper.
 
 ### Architecture
 
----
-Total params: 17,958,417
-Trainable params: 17,958,417
-Non-trainable params: 0
-Total mult-adds (Units.GIGABYTES): 2.29
----
-Input size (MB): 0.20
-Forward/backward pass size (MB): 6609.51
-Params size (MB): 71.53
-Estimated Total Size (MB): 6681.24
----
+Sequence length(seq_len): 1024
+Embedding dimensionality(d_model): 512
+Depth: 6
 
-1. Input: (batch_size, seq_len)
-2. Embeddings: (batch_size, seq_len, d_model) and it stays this shape until the output
-3. Decoder Block: run (depth) times
->  1. Relative self attention: I mostly followed [this implementation](https://jaketae.github.io/study/relative-positional-encoding/)
->  2. Dropout
->  3. Normalize
->  4. Feed forward(basically a linear layer)
->  5. Normalize again
-4. Projection (batch_size seq_len, vocab_size) - it's a matrix which has a probability for each token in the vocabulary
-5. Decode and show - I used the music21 library to convert the output to a score. If you don't have a score editor installed, you can change:
-```python
-getOutput(filename).show()
-```
-to:
-```python
-getOutput(filename).show("midi")
-```
-or
-```python
-getOutput(filename).show("text")
-```
+
+1. Input: Midi file converted to tokens, padded to length 1024 if necessary. Truncated if too long. This is the "seed" song that the model will continue.
+2. Convert to embeddings: (seq_len, d_model) and scale by sqrt(d_model)
+3. Decoder block: run depth times
+>   1. Relative self attention using the efficient skewing procedure
+>   2. Dropout
+>   3. Normalize
+>   4. Fully connected layer
+>   5. Normalize
+4. Apply final fully connected layer to output probabilities for each token
+5. Output: Choice between top-k, top-p, top-p with a section of the seed appended to decode. See ```python showcase.ipynb``` to try each of them!
+
 ### How to run
 
-Feel free to clone the repository and use it in another editor, I haven't looked into running it from command lines yet.
+```python showcase.ipynb``` currently contains everything required to train the model on one song, Reverie by Claude Debussy; mostly as a proof of concept. I am re-training on the full Maestro dataset and will commit the model once it's finished.
 
-The parameters I set for this model are in config.py, and the tokens and training data from Maestro are already preprocessed in the "training_data" folder. So just unzip them in the same directory as the project clone and it should work fine. Alternatively, you can input custom training data by replacing 
-```python
-tokenizer, ds = createDataset([r"training_data\midiData_EVENTS.pkl", r"training_data\tokens_EVENTS.pkl"], True)
-```
-with 
-```python
-tokenizer, ds = createDataset(getFilepaths("folder with .mid files here"), False)
-```
-
-In order to start the training, just run train.py and it should start automatically.
-
-If you finished training and would like to generate an output, scroll to the bottom of train.py and uncomment the following code:
-```python
-filename = "input .mid file to generate from"
-getOutput(filename).show()
-```
-Also comment the training code which is right above that.
