@@ -43,10 +43,9 @@ class RelativeGlobalAttention(nn.Module):
         self.query = nn.Linear(d_model, d_model)
         self.dropout = nn.Dropout(dropout)
         self.Er = nn.Parameter(torch.randn(max_len, d_head))
-        self.mask = torch.Tensor.bool(
-            torch.tril(torch.ones(max_len, max_len))
-            .unsqueeze(0).unsqueeze(0)
-        )
+        mask = torch.triu(torch.ones(max_len, max_len), diagonal=1).bool()
+        mask = mask.unsqueeze(0).unsqueeze(0)
+        self.register_buffer("mask", mask)
         # self.mask.shape = (1, 1, max_len, max_len)
 
     
@@ -76,10 +75,7 @@ class RelativeGlobalAttention(nn.Module):
         QK_t = torch.matmul(q, k_t)
         # QK_t.shape = (batch_size, num_heads, seq_len, seq_len)
         attn = (QK_t + Srel) / math.sqrt(q.size(-1))
-        # mask = self.mask[:, :, :seq_len, :seq_len] #Auto mask
-        mask = self.mask[:, :, :seq_len, :seq_len] #Auto mask
-        # mask.shape = (1, 1, seq_len, seq_len)
-        attn = attn.masked_fill(mask == 0, float("-inf"))
+        attn = attn.masked_fill(self.mask[:, :, :seq_len, :seq_len], float("-inf"))
         # attn.shape = (batch_size, num_heads, seq_len, seq_len)
         attn = F.softmax(attn, dim=-1)
         self.attention_scores = attn #For attention visualization during forward pass
