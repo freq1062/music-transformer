@@ -6,7 +6,7 @@ def get_config():
         "num_epochs": 300,
         "num_files":1282, #Number of files from the raw midi files, max 1282
         "lr": 10**-3, #Learning rate
-        "seq_len": 200, #Only works if from raw data since pkl files area already split. Also will actually be seq_len - 2 because of EOS, SOS tokens
+        "seq_len": 3000, #Only works if from raw data since pkl files area already split. Also will actually be seq_len - 2 because of EOS, SOS tokens
         "d_model": 512, #Dimensionality of embedding
         "datasource": 'maestro', #Source of data
         "model_folder": "weights", #Actually maestro\weights

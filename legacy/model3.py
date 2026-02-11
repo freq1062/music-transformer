@@ -48,8 +48,7 @@ class RelativeGlobalAttention(nn.Module):
         self.query = nn.Linear(d_model, d_model)
         self.dropout = nn.Dropout(dropout)
         self.Er = nn.Parameter(torch.randn(max_len, d_head))
-        self.register_buffer(
-            "mask", 
+        self.mask = torch.Tensor.bool(
             torch.tril(torch.ones(max_len, max_len))
             .unsqueeze(0).unsqueeze(0)
         )
