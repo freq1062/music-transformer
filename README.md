@@ -1,5 +1,6 @@
 # Description
-A pretty small decoder-only transformer model that I wrote using pytorch for an Extended Essay research project. 
+
+A pretty small decoder-only transformer model that I wrote using pytorch for an Extended Essay research project. Later came back to it because the original version was not working very well.
 
 Based on [Google's Magenta](https://magenta.tensorflow.org/music-transformer).
 
